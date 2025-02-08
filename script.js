@@ -1,34 +1,59 @@
+// Firebase Configuration
+const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_PROJECT.firebaseapp.com",
+    databaseURL: "https://YOUR_PROJECT.firebaseio.com",
+    projectId: "YOUR_PROJECT",
+    storageBucket: "YOUR_PROJECT.appspot.com",
+    messagingSenderId: "YOUR_MESSAGING_ID",
+    appId: "YOUR_APP_ID"
+};
+
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
 function gradeQuiz() {
+    let studentName = document.getElementById("student-name").value.trim();
+    if (!studentName) {
+        alert("Please enter your name.");
+        return;
+    }
+
     let answers = {
         q1: "Non-ciliated simple columnar epithelium",
-        q2: ["The cells are tightly packed", "nuclei are near the basal surface", "elongated and cylindrical nuclei"],
-        q3: ["gastrointestinal tract", "esophagus", "stomach", "small intestine", "large intestine", "ducts of endocrine and exocrine glands", "pancreas", "salivary glands"],
-        q4: "Transitional Epithelium",
-        q5: ["multiple layers of cells", "dome-shaped cells", "stretch and return", "mucus-secreting layer", "absence of cilia and goblet cells", "basal cells contact basement membrane"],
-        q6: ["urinary bladder", "ureters", "part of the urethra"],
-        q7: "Brown adipose tissue",
-        q8: ["high density of mitochondria", "multilocular lipid droplets", "abundant blood vessels", "high expression of UCP1", "peripheral nuclei"],
-        q9: "Loose connective tissue",
-        q10: "Hyaline Cartilage"
+        q1a: ["tightly packed", "elongated nuclei", "basal surface"],
+        q1b: ["gastrointestinal tract", "esophagus", "stomach", "intestine", "glands"],
+        q2: "Transitional Epithelium",
+        q2a: ["multiple layers", "dome-shaped", "stretch and return"],
+        q2b: ["urinary bladder", "ureters", "urethra"],
+        q3: "Brown adipose tissue",
+        q3a: ["multilocular lipid droplets", "high mitochondria"],
+        q3b: "Loose connective tissue",
+        q4: "Hyaline Cartilage",
+        q4a: "Connective tissue",
+        q4b: ["chondrocytes in cell nests", "perichondrium present"],
+        q5: "Lungs",
+        q5a: ["bronchi", "bronchioles", "alveoli"]
     };
 
     let totalScore = 0;
-    let feedback = "<h3>Results:</h3>";
+    let feedback = `<h3>Results for ${studentName}:</h3>`;
 
     function checkAnswer(inputId, correctAnswer) {
         let userAnswer = document.getElementById(inputId).value.trim().toLowerCase();
         if (typeof correctAnswer === "string") {
             if (userAnswer === correctAnswer.toLowerCase()) {
                 totalScore += 4;
-                return `<p>Question ${inputId.replace("q", "")}: ✅ Correct</p>`;
+                return `<p>Question ${inputId}: ✅ Correct</p>`;
             } else {
-                return `<p>Question ${inputId.replace("q", "")}: ❌ Incorrect. Correct answer: ${correctAnswer}</p>`;
+                return `<p>Question ${inputId}: ❌ Incorrect. Correct answer: ${correctAnswer}</p>`;
             }
         } else if (Array.isArray(correctAnswer)) {
             let correctCount = correctAnswer.filter(item => userAnswer.includes(item.toLowerCase())).length;
             let score = (correctCount / correctAnswer.length) * 4;
             totalScore += score;
-            return `<p>Question ${inputId.replace("q", "")}: ${correctCount > 0 ? "✅ Partially Correct" : "❌ Incorrect"}. Correct: ${correctAnswer.join(", ")}</p>`;
+            return `<p>Question ${inputId}: ${correctCount > 0 ? "✅ Partially Correct" : "❌ Incorrect"}. Correct: ${correctAnswer.join(", ")}</p>`;
         }
     }
 
@@ -41,4 +66,12 @@ function gradeQuiz() {
     feedback += `<h3>Comment: ${comment}</h3>`;
 
     document.getElementById("result-container").innerHTML = feedback;
+
+    // Save to Firebase
+    db.ref("quiz-results").push({
+        name: studentName,
+        score: totalScore,
+        comment: comment,
+        timestamp: new Date().toISOString()
+    });
 }
