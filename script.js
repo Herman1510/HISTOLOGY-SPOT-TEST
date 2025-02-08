@@ -1,13 +1,13 @@
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-    apiKey: "AIzaSyB254WTAWWECfZPlsxF9-83i_Ey-EZlUKQ",
-    authDomain: "histology-spot.firebaseapp.com",
-    databaseURL: "https://histology-spot-default-rtdb.firebaseio.com",
-    projectId: "histology-spot",
-    storageBucket: "histology-spot.firebasestorage.app",
-    messagingSenderId: "770465642565",
-    appId: "1:770465642565:web:703b4fc75051910193cb2c",
-    measurementId: "G-QMS13Z8F2G"
+  apiKey: "AIzaSyDwL6QcvqlT53T-CaFLYU8cBMpM-rQwfyE",
+  authDomain: "spot-db69a.firebaseapp.com",
+  databaseURL: "https://spot-db69a-default-rtdb.firebaseio.com",
+  projectId: "spot-db69a",
+  storageBucket: "spot-db69a.firebasestorage.app",
+  messagingSenderId: "4083038164",
+  appId: "1:4083038164:web:56df1237f3ee926b2e8841",
+  measurementId: "G-ZGPYZC9SE6"
 };
 
 // Initialize Firebase
