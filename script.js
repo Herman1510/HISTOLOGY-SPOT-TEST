@@ -1,3 +1,4 @@
+// Firebase Configuration
 const firebaseConfig = {
     apiKey: "AIzaSyB254WTAWWECfZPlsxF9-83i_Ey-EZlUKQ",
     authDomain: "histology-spot.firebaseapp.com",
@@ -8,68 +9,79 @@ const firebaseConfig = {
     measurementId: "G-QMS13Z8F2G"
 };
 
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
+// Initialize Firebase
+const app = firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore(app);
 
-const correctAnswers = {
-    q1a: "Non-ciliated simple columnar epithelium",
-    q1b: "The cells are tightly packed, nuclei are elongated and basal.",
-    q1c: "Gastrointestinal tract, endocrine and exocrine gland ducts.",
+// Answer keys for grading
+const correctAnswers = [
+    'Non-ciliated simple columnar epithelium',
+    'Transitional Epithelium',
+    'Brown adipose tissue',
+    'Hyaline Cartilage',
+    'Lungs'
+];
 
-    q2a: "Transitional Epithelium",
-    q2b: "Multiple layers, dome-shaped cells, stretchable.",
-    q2c: "Urinary bladder, ureters, part of the urethra.",
+// Grading function
+function gradeQuiz(answers) {
+    let totalScore = 0;
+    let comments = '';
+    let feedback = '';
 
-    q3a: "Brown adipose tissue",
-    q3b: "High mitochondria, multilocular lipid droplets, abundant blood vessels.",
-    q3c: "Loose connective tissue",
-
-    q4a: "Hyaline Cartilage",
-    q4b: "Connective tissue",
-    q4c: "Chondrocytes in nests, basophilic matrix, perichondrium present.",
-
-    q5a: "Lungs",
-    q5b: "Alveoli lined by simple squamous epithelium, cut sections of bronchioles."
-};
-
-function submitQuiz() {
-    let studentName = document.getElementById("studentName").value;
-    let score = 0;
-    let totalMarks = 20;
-    let resultsHTML = `<h2>Results</h2><p>Name: ${studentName}</p><p>Score: `;
-
-    let answers = {};
-    for (let key in correctAnswers) {
-        let userAnswer = document.getElementById(key).value.trim().toLowerCase();
-        answers[key] = userAnswer;
-
-        if (userAnswer === correctAnswers[key].toLowerCase()) {
-            score += 4;
+    answers.forEach((answer, index) => {
+        if (answer.toLowerCase().includes(correctAnswers[index].toLowerCase())) {
+            totalScore += 4;
+            comments += `Question ${index + 1}: Correct answer!\n`;
+        } else {
+            comments += `Question ${index + 1}: Incorrect answer. The correct answer is "${correctAnswers[index]}".\n`;
         }
-    }
-
-    let comment = score === 20 ? "Excellent!" :
-                  score >= 12 ? "Good job!" :
-                  score >= 8 ? "Fair, but study more." : "Needs improvement.";
-
-    resultsHTML += `${score}/${totalMarks}</p><p>Comment: ${comment}</p><h3>Correct Answers:</h3><ul>`;
-
-    for (let key in correctAnswers) {
-        resultsHTML += `<li><strong>${key.toUpperCase()}</strong>: ${correctAnswers[key]}</li>`;
-    }
-
-    resultsHTML += `</ul>`;
-    document.getElementById("results").innerHTML = resultsHTML;
-
-    db.ref("quiz-results").push({
-        name: studentName,
-        score: score,
-        comment: comment,
-        answers: answers,
-        timestamp: new Date().toISOString()
-    }).then(() => {
-        console.log("Data saved successfully!");
-    }).catch((error) => {
-        console.log("Firebase Error:", error);
     });
+
+    if (totalScore === 20) {
+        feedback = 'Excellent!';
+    } else if (totalScore >= 16) {
+        feedback = 'Good job!';
+    } else if (totalScore >= 12) {
+        feedback = 'Fair performance.';
+    } else {
+        feedback = 'Needs improvement.';
+    }
+
+    return { totalScore, comments, feedback };
 }
+
+// Handle form submission
+document.getElementById('quiz-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    // Get student answers
+    const answers = [
+        document.getElementById('answer1').value,
+        document.getElementById('answer2').value,
+        document.getElementById('answer3').value,
+        document.getElementById('answer4').value,
+        document.getElementById('answer5').value
+    ];
+
+    // Get student name
+    const studentName = document.getElementById('student-name').value || "Anonymous";
+
+    // Grade the quiz
+    const { totalScore, comments, feedback } = gradeQuiz(answers);
+
+    // Save to Firebase
+    db.collection("quizResults").add({
+        studentName: studentName,
+        score: totalScore,
+        feedback: feedback,
+        comments: comments
+    });
+
+    // Display results
+    document.getElementById('results').innerHTML = `
+        <h3>Your Results</h3>
+        <p>Score: ${totalScore} / 20</p>
+        <p>Feedback: ${feedback}</p>
+        <pre>${comments}</pre>
+    `;
+});
