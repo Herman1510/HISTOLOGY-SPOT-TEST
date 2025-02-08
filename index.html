@@ -5,68 +5,73 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Histology Spot Quiz</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js"></script>
 </head>
 <body>
     <div class="quiz-container">
         <h2>Histology Spot Quiz</h2>
-        
+
         <form id="quiz-form">
+            <label>Enter your name:</label>
+            <input type="text" id="student-name" placeholder="Your Name" required>
+
             <!-- Question 1 -->
             <div class="question">
                 <h3>1. Identify the structure projected.</h3>
                 <img src="no1.jpg" alt="Question 1 Image">
-                <input type="text" id="q1" placeholder="Type your answer here">
-            </div>
-            <div class="question">
-                <h3>2. What are the histological identification features for your answer above?</h3>
-                <textarea id="q2" placeholder="Type your answer here"></textarea>
-            </div>
-            <div class="question">
-                <h3>3. State the body parts that are lined by the structure.</h3>
-                <textarea id="q3" placeholder="Type your answer here"></textarea>
+                <input type="text" id="q1">
+                <h4>i) What are the histological identification features?</h4>
+                <textarea id="q1a"></textarea>
+                <h4>ii) State the body parts lined by this structure.</h4>
+                <textarea id="q1b"></textarea>
             </div>
 
             <!-- Question 2 -->
             <div class="question">
-                <h3>4. Identify the structure projected.</h3>
+                <h3>2. Identify the structure projected.</h3>
                 <img src="no2.jpg" alt="Question 2 Image">
-                <input type="text" id="q4" placeholder="Type your answer here">
-            </div>
-            <div class="question">
-                <h3>5. What are the histological identification features for your answer above?</h3>
-                <textarea id="q5" placeholder="Type your answer here"></textarea>
-            </div>
-            <div class="question">
-                <h3>6. State the body parts that are lined by the structure.</h3>
-                <textarea id="q6" placeholder="Type your answer here"></textarea>
+                <input type="text" id="q2">
+                <h4>i) What are the histological identification features?</h4>
+                <textarea id="q2a"></textarea>
+                <h4>ii) State the body parts lined by this structure.</h4>
+                <textarea id="q2b"></textarea>
             </div>
 
             <!-- Question 3 -->
             <div class="question">
-                <h3>7. Identify the structure projected.</h3>
-                <input type="text" id="q7" placeholder="Type your answer here">
-            </div>
-            <div class="question">
-                <h3>8. What are the histological identification features for your answer above?</h3>
-                <textarea id="q8" placeholder="Type your answer here"></textarea>
-            </div>
-            <div class="question">
-                <h3>9. What type of tissue does the structure belong to?</h3>
-                <input type="text" id="q9" placeholder="Type your answer here">
+                <h3>3. Identify the structure projected.</h3>
+                <input type="text" id="q3">
+                <h4>i) What are the histological identification features?</h4>
+                <textarea id="q3a"></textarea>
+                <h4>ii) What type of tissue does this structure belong to?</h4>
+                <input type="text" id="q3b">
             </div>
 
             <!-- Question 4 -->
             <div class="question">
-                <h3>10. Identify the slide projected OR identify the structure projected.</h3>
+                <h3>4. Identify the slide projected.</h3>
                 <img src="no4.jpg" alt="Question 4 Image">
-                <input type="text" id="q10" placeholder="Type your answer here">
+                <input type="text" id="q4">
+                <h4>i) What type of tissue is this?</h4>
+                <input type="text" id="q4a">
+                <h4>ii) What are the histological identification features?</h4>
+                <textarea id="q4b"></textarea>
+            </div>
+
+            <!-- Question 5 -->
+            <div class="question">
+                <h3>5. Identify the structure or organ projected.</h3>
+                <img src="no5.jpg" alt="Question 5 Image">
+                <input type="text" id="q5">
+                <h4>i) What are the histological identification features?</h4>
+                <textarea id="q5a"></textarea>
             </div>
 
             <button type="button" onclick="gradeQuiz()">Submit</button>
         </form>
 
         <div id="result-container"></div>
-
         <p class="footer">Presented to you by a man from the future</p>
     </div>
 
