@@ -10,78 +10,68 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-const app = firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore(app);
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
 
-// Answer keys for grading
-const correctAnswers = [
-    'Non-ciliated simple columnar epithelium',
-    'Transitional Epithelium',
-    'Brown adipose tissue',
-    'Hyaline Cartilage',
-    'Lungs'
-];
-
-// Grading function
-function gradeQuiz(answers) {
-    let totalScore = 0;
-    let comments = '';
-    let feedback = '';
-
-    answers.forEach((answer, index) => {
-        if (answer.toLowerCase().includes(correctAnswers[index].toLowerCase())) {
-            totalScore += 4;
-            comments += `Question ${index + 1}: Correct answer!\n`;
-        } else {
-            comments += `Question ${index + 1}: Incorrect answer. The correct answer is "${correctAnswers[index]}".\n`;
-        }
-    });
-
-    if (totalScore === 20) {
-        feedback = 'Excellent!';
-    } else if (totalScore >= 16) {
-        feedback = 'Good job!';
-    } else if (totalScore >= 12) {
-        feedback = 'Fair performance.';
-    } else {
-        feedback = 'Needs improvement.';
+function gradeQuiz() {
+    let studentName = document.getElementById("student-name").value.trim();
+    if (!studentName) {
+        alert("Please enter your name.");
+        return;
     }
 
-    return { totalScore, comments, feedback };
-}
+    let answers = {
+        q1: "Non-ciliated simple columnar epithelium",
+        q1a: ["tightly packed", "elongated nuclei", "basal surface"],
+        q1b: ["gastrointestinal tract", "esophagus", "stomach", "intestine", "glands"],
+        q2: "Transitional Epithelium",
+        q2a: ["multiple layers", "dome-shaped", "stretch and return"],
+        q2b: ["urinary bladder", "ureters", "urethra"],
+        q3: "Brown adipose tissue",
+        q3a: ["multilocular lipid droplets", "high mitochondria"],
+        q3b: "Loose connective tissue",
+        q4: "Hyaline Cartilage",
+        q4a: "Connective tissue",
+        q4b: ["chondrocytes in cell nests", "perichondrium present"],
+        q5: "Lungs",
+        q5a: ["bronchi", "bronchioles", "alveoli"]
+    };
 
-// Handle form submission
-document.getElementById('quiz-form').addEventListener('submit', function(e) {
-    e.preventDefault();
+    let totalScore = 0;
+    let feedback = `<h3>Results for ${studentName}:</h3>`;
 
-    // Get student answers
-    const answers = [
-        document.getElementById('answer1').value,
-        document.getElementById('answer2').value,
-        document.getElementById('answer3').value,
-        document.getElementById('answer4').value,
-        document.getElementById('answer5').value
-    ];
+    function checkAnswer(inputId, correctAnswer) {
+        let userAnswer = document.getElementById(inputId).value.trim().toLowerCase();
+        if (typeof correctAnswer === "string") {
+            if (userAnswer === correctAnswer.toLowerCase()) {
+                totalScore += 4;
+                return `<p>Question ${inputId}: ✅ Correct</p>`;
+            } else {
+                return `<p>Question ${inputId}: ❌ Incorrect. Correct answer: ${correctAnswer}</p>`;
+            }
+        } else if (Array.isArray(correctAnswer)) {
+            let correctCount = correctAnswer.filter(item => userAnswer.includes(item.toLowerCase())).length;
+            let score = (correctCount / correctAnswer.length) * 4;
+            totalScore += score;
+            return `<p>Question ${inputId}: ${correctCount > 0 ? "✅ Partially Correct" : "❌ Incorrect"}. Correct: ${correctAnswer.join(", ")}</p>`;
+        }
+    }
 
-    // Get student name
-    const studentName = document.getElementById('student-name').value || "Anonymous";
+    for (let key in answers) {
+        feedback += checkAnswer(key, answers[key]);
+    }
 
-    // Grade the quiz
-    const { totalScore, comments, feedback } = gradeQuiz(answers);
+    let comment = totalScore >= 16 ? "Excellent!" : totalScore >= 12 ? "Good Job!" : totalScore >= 8 ? "Needs Improvement" : "Try Again";
+    feedback += `<h3>Total Score: ${totalScore}/20</h3>`;
+    feedback += `<h3>Comment: ${comment}</h3>`;
+
+    document.getElementById("result-container").innerHTML = feedback;
 
     // Save to Firebase
-    db.collection("quizResults").add({
-        studentName: studentName,
+    db.ref("quiz-results").push({
+        name: studentName,
         score: totalScore,
-        feedback: feedback,
-        comments: comments
+        comment: comment,
+        timestamp: new Date().toISOString()
     });
-
-    // Display results
-    document.getElementById('results').innerHTML = `
-        <h3>Your Results</h3>
-        <p>Score: ${totalScore} / 20</p>
-        <p>Feedback: ${feedback}</p>
-        <pre>${comments}</pre>
-    `;
-});
+}
