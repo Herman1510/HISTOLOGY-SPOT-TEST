@@ -4,78 +4,68 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Histology Spot Quiz</title>
-    <link rel="stylesheet" href="styles.css">
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-database.js"></script>
 </head>
 <body>
-    <div class="quiz-container">
-        <h2>Histology Spot Quiz</h2>
+    <h1>Histology Spot Quiz</h1>
+    <p>Enter your name:</p>
+    <input type="text" id="studentName" placeholder="Your Name">
+    
+    <form id="quizForm">
+        <div class="question">
+            <img src="no1.jpg" alt="Histology Image 1" class="quiz-image">
+            <p>1. Identify the structure projected.</p>
+            <input type="text" id="q1a">
+            <p>i) What are the histological identification features?</p>
+            <textarea id="q1b"></textarea>
+            <p>ii) State the body parts lined by this structure.</p>
+            <textarea id="q1c"></textarea>
+        </div>
 
-        <form id="quiz-form">
-            <label>Enter your name:</label>
-            <input type="text" id="student-name" placeholder="Your Name" required>
+        <div class="question">
+            <img src="no2.jpg" alt="Histology Image 2" class="quiz-image">
+            <p>2. Identify the structure projected.</p>
+            <input type="text" id="q2a">
+            <p>i) What are the histological identification features?</p>
+            <textarea id="q2b"></textarea>
+            <p>ii) State the body parts lined by this structure.</p>
+            <textarea id="q2c"></textarea>
+        </div>
 
-            <!-- Question 1 -->
-            <div class="question">
-                <h3>1. Identify the structure projected.</h3>
-                <img src="no1.jpg" alt="Question 1 Image">
-                <input type="text" id="q1">
-                <h4>i) What are the histological identification features?</h4>
-                <textarea id="q1a"></textarea>
-                <h4>ii) State the body parts lined by this structure.</h4>
-                <textarea id="q1b"></textarea>
-            </div>
+        <div class="question">
+            <img src="no3.jpg" alt="Histology Image 3" class="quiz-image">
+            <p>3. Identify the structure projected.</p>
+            <input type="text" id="q3a">
+            <p>i) What are the histological identification features?</p>
+            <textarea id="q3b"></textarea>
+            <p>ii) What type of tissue does this structure belong to?</p>
+            <input type="text" id="q3c">
+        </div>
 
-            <!-- Question 2 -->
-            <div class="question">
-                <h3>2. Identify the structure projected.</h3>
-                <img src="no2.jpg" alt="Question 2 Image">
-                <input type="text" id="q2">
-                <h4>i) What are the histological identification features?</h4>
-                <textarea id="q2a"></textarea>
-                <h4>ii) State the body parts lined by this structure.</h4>
-                <textarea id="q2b"></textarea>
-            </div>
+        <div class="question">
+            <img src="no4.jpg" alt="Histology Image 4" class="quiz-image">
+            <p>4. Identify the slide projected.</p>
+            <input type="text" id="q4a">
+            <p>i) What type of tissue is this?</p>
+            <input type="text" id="q4b">
+            <p>ii) What are the histological identification features?</p>
+            <textarea id="q4c"></textarea>
+        </div>
 
-            <!-- Question 3 -->
-            <div class="question">
-                <h3>3. Identify the structure projected.</h3>
-                <img src="no3.jpg" alt="Question 3 Image">
-                <input type="text" id="q3">
-                <h4>i) What are the histological identification features?</h4>
-                <textarea id="q3a"></textarea>
-                <h4>ii) What type of tissue does this structure belong to?</h4>
-                <input type="text" id="q3b">
-            </div>
+        <div class="question">
+            <img src="no5.jpg" alt="Histology Image 5" class="quiz-image">
+            <p>5. Identify the structure or organ projected.</p>
+            <input type="text" id="q5a">
+            <p>i) What are the histological identification features?</p>
+            <textarea id="q5b"></textarea>
+        </div>
 
-            <!-- Question 4 -->
-            <div class="question">
-                <h3>4. Identify the slide projected.</h3>
-                <img src="no4.jpg" alt="Question 4 Image">
-                <input type="text" id="q4">
-                <h4>i) What type of tissue is this?</h4>
-                <input type="text" id="q4a">
-                <h4>ii) What are the histological identification features?</h4>
-                <textarea id="q4b"></textarea>
-            </div>
+        <button type="button" onclick="submitQuiz()">Submit</button>
+    </form>
 
-            <!-- Question 5 -->
-            <div class="question">
-                <h3>5. Identify the structure or organ projected.</h3>
-                <img src="no5.jpg" alt="Question 5 Image">
-                <input type="text" id="q5">
-                <h4>i) What are the histological identification features?</h4>
-                <textarea id="q5a"></textarea>
-            </div>
-
-            <button type="button" onclick="gradeQuiz()">Submit</button>
-        </form>
-
-        <div id="result-container"></div>
-        <p class="footer">Presented to you by a man from the future</p>
-    </div>
-
+    <div id="results"></div>
     <script src="script.js"></script>
 </body>
 </html>
