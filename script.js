@@ -2,6 +2,7 @@
 const firebaseConfig = {
     apiKey: "AIzaSyB254WTAWWECfZPlsxF9-83i_Ey-EZlUKQ",
     authDomain: "histology-spot.firebaseapp.com",
+    databaseURL: "https://histology-spot-default-rtdb.firebaseio.com",
     projectId: "histology-spot",
     storageBucket: "histology-spot.firebasestorage.app",
     messagingSenderId: "770465642565",
