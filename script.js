@@ -1,12 +1,12 @@
-// Firebase Configuration
+// Correct Firebase Configuration (Replace with Your Real Credentials)
 const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_PROJECT.firebaseapp.com",
-    databaseURL: "https://YOUR_PROJECT.firebaseio.com",
-    projectId: "YOUR_PROJECT",
-    storageBucket: "YOUR_PROJECT.appspot.com",
-    messagingSenderId: "YOUR_MESSAGING_ID",
-    appId: "YOUR_APP_ID"
+    apiKey: "AIzaSyEXAMPLE",
+    authDomain: "your-project.firebaseapp.com",
+    databaseURL: "https://your-project.firebaseio.com",
+    projectId: "your-project",
+    storageBucket: "your-project.appspot.com",
+    messagingSenderId: "123456789",
+    appId: "1:123456789:web:abc123"
 };
 
 // Initialize Firebase
@@ -73,5 +73,11 @@ function gradeQuiz() {
         score: totalScore,
         comment: comment,
         timestamp: new Date().toISOString()
+    }, function(error) {
+        if (error) {
+            console.log("Data could not be saved: " + error);
+        } else {
+            console.log("Data saved successfully!");
+        }
     });
 }
