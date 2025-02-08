@@ -68,11 +68,8 @@ function gradeQuiz() {
 
   document.getElementById("result-container").innerHTML = feedback;
 
-  // Save to Firebase
+  // Save only the student's name to Firebase
   db.ref("quiz-results").push({
-    name: studentName,
-    score: totalScore,
-    comment: comment,
-    timestamp: new Date().toISOString()
+    name: studentName
   });
 }
