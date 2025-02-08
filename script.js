@@ -36,6 +36,7 @@ function submitQuiz() {
     let studentName = document.getElementById("studentName").value;
     let score = 0;
     let totalMarks = 20;
+    let resultsHTML = `<h2>Results</h2><p>Name: ${studentName}</p><p>Score: `;
 
     let answers = {};
     for (let key in correctAnswers) {
@@ -47,34 +48,28 @@ function submitQuiz() {
         }
     }
 
-    let comment = "";
-    if (score === 20) {
-        comment = "Excellent!";
-    } else if (score >= 12) {
-        comment = "Good job!";
-    } else if (score >= 8) {
-        comment = "Fair, but study more.";
-    } else {
-        comment = "Needs improvement.";
+    let comment = score === 20 ? "Excellent!" :
+                  score >= 12 ? "Good job!" :
+                  score >= 8 ? "Fair, but study more." : "Needs improvement.";
+
+    resultsHTML += `${score}/${totalMarks}</p><p>Comment: ${comment}</p><h3>Correct Answers:</h3><ul>`;
+
+    for (let key in correctAnswers) {
+        resultsHTML += `<li><strong>${key.toUpperCase()}</strong>: ${correctAnswers[key]}</li>`;
     }
 
-    document.getElementById("results").innerHTML = `
-        <h2>Results</h2>
-        <p>Name: ${studentName}</p>
-        <p>Score: ${score}/${totalMarks}</p>
-        <p>Comment: ${comment}</p>
-    `;
+    resultsHTML += `</ul>`;
+    document.getElementById("results").innerHTML = resultsHTML;
 
     db.ref("quiz-results").push({
         name: studentName,
         score: score,
         comment: comment,
+        answers: answers,
         timestamp: new Date().toISOString()
-    }, function(error) {
-        if (error) {
-            console.log("Firebase Error:", error);
-        } else {
-            console.log("Data saved successfully!");
-        }
+    }).then(() => {
+        console.log("Data saved successfully!");
+    }).catch((error) => {
+        console.log("Firebase Error:", error);
     });
 }
